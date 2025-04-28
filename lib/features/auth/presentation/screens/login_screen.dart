@@ -2,13 +2,13 @@ import 'package:fake_store/core/di/di.dart';
 import 'package:fake_store/core/shared/constants/app_colors.dart';
 import 'package:fake_store/core/shared/constants/app_images.dart';
 import 'package:fake_store/core/shared/constants/app_styles.dart';
-import 'package:fake_store/core/shared/constants/common_methods.dart';
 import 'package:fake_store/core/shared/widgets/custom_button.dart';
-import 'package:fake_store/core/shared/widgets/custom_text_field.dart';
+import 'package:fake_store/core/shared/widgets/custom_reative_text_field.dart';
 import 'package:fake_store/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:fake_store/features/auth/presentation/cubit/auth_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -49,15 +49,16 @@ class LoginScreen extends StatelessWidget {
             }
           },
           builder: (context, state) {
+            final cubit = context.read<AuthCubit>();
             return Padding(
-              padding: EdgeInsets.symmetric(horizontal: 22),
-              child: Form(
-                key: context.read<AuthCubit>().formKey,
+              padding: const EdgeInsets.symmetric(horizontal: 22),
+              child: ReactiveForm(
+                formGroup: cubit.form,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 60),
+                    const SizedBox(height: 60),
                     Text(
                       'Login Now...',
                       style: AppStyles.styleMedium20.copyWith(
@@ -65,7 +66,7 @@ class LoginScreen extends StatelessWidget {
                         fontSize: getResponsiveFontSize(fontSize: 24),
                       ),
                     ),
-                    SizedBox(height: 7),
+                    const SizedBox(height: 7),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -79,23 +80,71 @@ class LoginScreen extends StatelessWidget {
                         Image.asset(AppImages.shirt, width: 27),
                       ],
                     ),
-                    SizedBox(height: 10),
-                    CustomTextField(
-                      text: 'Email',
-                      validator: (val) => validateField(value: val),
-                      controller: context.read<AuthCubit>().usernameController,
+                    const SizedBox(height: 10),
+                    // ReactiveTextField<String>(
+                    //   formControlName: 'email',
+                    //   style: AppStyles.styleRegular16,
+                    //   decoration: InputDecoration(
+                    //     labelText: 'Email',
+                    //     labelStyle: AppStyles.styleMedium18,
+                    //     contentPadding: EdgeInsets.zero,
+                    //     border: const UnderlineInputBorder(),
+                    //   ),
+                    //   validationMessages: {
+                    //     ValidationMessage.required:
+                    //         (error) => 'Email is required',
+                    //     ValidationMessage.email:
+                    //         (error) => 'Invalid email format',
+                    //   },
+                    // ),
+                    // const SizedBox(height: 15),
+                    // ReactiveTextField<String>(
+                    //   formControlName: 'password',
+                    //   style: AppStyles.styleRegular16,
+                    //   obscureText: !cubit.isPasswordVisible,
+                    //   decoration: InputDecoration(
+                    //     labelText: 'Password',
+                    //     labelStyle: AppStyles.styleMedium18,
+                    //     contentPadding: EdgeInsets.zero,
+                    //     border: const UnderlineInputBorder(),
+                    //     suffixIcon: IconButton(
+                    //       icon: Icon(
+                    //         cubit.isPasswordVisible
+                    //             ? Icons.visibility
+                    //             : Icons.visibility_off,
+                    //       ),
+                    //       onPressed: cubit.passwordEyeTapped,
+                    //     ),
+                    //   ),
+                    //   validationMessages: {
+                    //     ValidationMessage.required:
+                    //         (error) => 'Password is required',
+                    //   },
+                    // ),
+                    CustomReactiveTextField(
+                      formControlName: 'email',
+                      label: 'Email',
+                      validationMessages: {
+                        ValidationMessage.required:
+                            (error) => 'Email is required',
+                        ValidationMessage.email:
+                            (error) => 'Invalid email format',
+                      },
                     ),
-                    SizedBox(height: 7),
-                    CustomTextField(
-                      text: 'Password',
-                      validator: (val) => validateField(value: val),
-                      controller: context.read<AuthCubit>().passwordController,
-                      hasSuffixIcon: true,
-                      isPasswordVisible:
-                          context.read<AuthCubit>().isPasswordVisible,
-                      onEyeTap: context.read<AuthCubit>().passwordEyeTapped,
+                    const SizedBox(height: 15),
+                    CustomReactiveTextField(
+                      formControlName: 'password',
+                      label: 'Password',
+                      obscureText: !cubit.isPasswordVisible,
+                      showEyeIcon: true,
+                      onEyeTap: cubit.passwordEyeTapped,
+                      validationMessages: {
+                        ValidationMessage.required:
+                            (error) => 'Password is required',
+                      },
                     ),
-                    SizedBox(height: 15),
+
+                    const SizedBox(height: 15),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -105,20 +154,17 @@ class LoginScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: 25),
+                    const SizedBox(height: 25),
                     CustomButton(
                       text: 'Login',
                       isLoading: state is AuthLoading,
-                      onPressed:
-                          () => context.read<AuthCubit>().loginButtonPressed(
-                            context,
-                          ),
+                      onPressed: () => cubit.loginButtonPressed(context),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
+                        const Text(
                           "Don't have an account? ",
                           style: TextStyle(
                             fontSize: 15,
@@ -138,7 +184,7 @@ class LoginScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
                   ],
                 ),
               ),

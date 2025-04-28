@@ -1,14 +1,15 @@
 import 'package:dio/dio.dart';
 
 class DioHelper {
-  static late Dio dio;
+  static late Dio dioInstance;
 
   static void init() {
-    dio = Dio(
+    dioInstance = Dio(
       BaseOptions(
-        baseUrl: 'https://dummyjson.com/',
+        baseUrl: 'https://fakestoreapi.in/api/',
         receiveDataWhenStatusError: true,
-        headers: {'Content-Type': 'application/json'},
+        connectTimeout: const Duration(seconds: 10),
+        receiveTimeout: const Duration(seconds: 10),
       ),
     );
   }
@@ -17,6 +18,13 @@ class DioHelper {
     required String url,
     required Map<String, dynamic> data,
   }) async {
-    return await dio.post(url, data: data);
+    return await dioInstance.post(url, data: data);
+  }
+
+  static Future<Response> getData({
+    required String url,
+    Map<String, dynamic>? data,
+  }) async {
+    return await dioInstance.get(url, data: data);
   }
 }

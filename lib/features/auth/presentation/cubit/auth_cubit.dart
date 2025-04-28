@@ -1,21 +1,25 @@
 import 'package:fake_store/core/network/shared.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 import 'package:dio/dio.dart';
 import '../../domain/usecases/login_usecase.dart';
 import 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   final LoginUseCase loginUseCase;
+  final SecureStorageService secureStorageService;
 
   AuthCubit(this.loginUseCase, this.secureStorageService)
     : super(AuthInitial());
 
-  final usernameController = TextEditingController();
-  final passwordController = TextEditingController();
+  final form = FormGroup({
+    'email': FormControl<String>(
+      validators: [Validators.required, Validators.email],
+    ),
+    'password': FormControl<String>(validators: [Validators.required]),
+  });
+
   bool isPasswordVisible = false;
-  final SecureStorageService secureStorageService;
-  final formKey = GlobalKey<FormState>();
 
   Future<void> login(String username, String password) async {
     emit(AuthLoading());
@@ -24,34 +28,25 @@ class AuthCubit extends Cubit<AuthState> {
       await secureStorageService.saveToken(user.token);
       emit(AuthSuccess(user));
     } on DioException catch (e) {
-      emit(AuthFailure(e.response?.data ?? 'Unknown error occurred'));
+      emit(
+        AuthFailure(e.response?.data['message'] ?? 'Unknown error occurred'),
+      );
     } catch (e) {
       emit(AuthFailure('Something went wrong'));
     }
   }
 
-  loginButtonPressed(BuildContext context) {
-    final username = usernameController.text.trim();
-    final password = passwordController.text.trim();
-
-    // if (username.isEmpty || password.isEmpty) {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(
-    //       content: Text(
-    //         'Please fill all fields',
-    //         style: AppStyles.styleMedium16.copyWith(color: Colors.white),
-    //       ),
-    //       backgroundColor: Colors.red,
-    //     ),
-    //   );
-    //   return;
-    // }
-    if (formKey.currentState!.validate() == true) {
-      BlocProvider.of<AuthCubit>(context).login(username, password);
+  void loginButtonPressed(context) {
+    if (form.valid) {
+      final username = form.control('email').value as String;
+      final password = form.control('password').value as String;
+      login(username, password);
+    } else {
+      form.markAllAsTouched();
     }
   }
 
-  passwordEyeTapped() {
+  void passwordEyeTapped() {
     isPasswordVisible = !isPasswordVisible;
     emit(PasswordEyeChanged());
   }

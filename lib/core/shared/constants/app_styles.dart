@@ -7,6 +7,11 @@ abstract class AppStyles {
     fontWeight: FontWeight.w400,
     fontFamily: 'dear-sans',
   );
+  static TextStyle styleRegular18 = TextStyle(
+    fontSize: getResponsiveFontSize(fontSize: 18),
+    fontWeight: FontWeight.w400,
+    fontFamily: 'dear-sans',
+  );
 
   static TextStyle styleSemiBold16 = TextStyle(
     fontSize: getResponsiveFontSize(fontSize: 16),
@@ -37,14 +42,12 @@ abstract class AppStyles {
     fontSize: getResponsiveFontSize(fontSize: 20),
     fontWeight: FontWeight.w500,
     fontFamily: 'dear-sans',
-    color: Color(0xffffffff),
   );
 
   static TextStyle styleRegular20 = TextStyle(
     fontSize: getResponsiveFontSize(fontSize: 20),
     fontWeight: FontWeight.w400,
     fontFamily: 'dear-sans',
-    color: Color(0xffffffff),
   );
 
   static TextStyle styleRegular30 = TextStyle(
