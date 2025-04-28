@@ -1,8 +1,11 @@
 import 'package:fake_store/core/network/shared.dart';
 import 'package:fake_store/features/home/data/data_source/home_remote_data_source.dart';
 import 'package:fake_store/features/home/data/repositories/category_repository_impl.dart';
+import 'package:fake_store/features/home/data/repositories/products_repository_impl.dart';
 import 'package:fake_store/features/home/domain/repositories/category_repository.dart';
+import 'package:fake_store/features/home/domain/repositories/product_repository.dart';
 import 'package:fake_store/features/home/domain/usecases/category_usecase.dart';
+import 'package:fake_store/features/home/domain/usecases/product_usecase.dart';
 import 'package:fake_store/features/home/presentation/cubit/home_cubit.dart';
 import 'package:get_it/get_it.dart';
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
@@ -30,6 +33,7 @@ Future<void> init() async {
 
   // Use cases
   sl.registerLazySingleton(() => CategoryUsecase(sl()));
+  sl.registerLazySingleton(() => ProductUsecase(sl()));
 
   // Repository
   sl.registerLazySingleton<HomeRemoteDataSource>(
@@ -37,6 +41,9 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<CategoryRepository>(
     () => CategoryRepositoryImpl(sl<HomeRemoteDataSource>()),
+  );
+  sl.registerLazySingleton<ProductRepository>(
+    () => ProductsRepositoryImpl(sl<HomeRemoteDataSource>()),
   );
 
   sl.registerFactory(
@@ -52,6 +59,10 @@ Future<void> init() async {
   // );
   // sl.registerLazySingleton(() => FetchProductsUseCase(sl()));
   sl.registerFactory(
-    () => HomeCubit(categoryUsecase: sl(), secureStorageService: sl()),
+    () => HomeCubit(
+      categoryUsecase: sl(),
+      secureStorageService: sl(),
+      productUsecase: sl(),
+    ),
   );
 }

@@ -4,6 +4,7 @@ import 'package:fake_store/features/home/presentation/cubit/home_cubit.dart';
 import 'package:fake_store/features/home/presentation/cubit/home_state.dart';
 import 'package:fake_store/features/home/presentation/screens/widgets/categories_list.dart';
 import 'package:fake_store/features/home/presentation/screens/widgets/custom_search_bar.dart';
+import 'package:fake_store/features/home/presentation/screens/widgets/products_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,14 +20,36 @@ class HomeScreen extends StatelessWidget {
           listener: (context, state) {},
           builder: (context, state) {
             final cubit = context.read<HomeCubit>();
-            return Column(
+            return ListView(
+              controller: cubit.scrollController,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 50, left: 15, right: 15),
+                  padding: EdgeInsets.only(
+                    top: MediaQuery.viewInsetsOf(context).top + 20,
+                    left: 15,
+                    right: 15,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(children: [Icon(Icons.menu, size: 25)]),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Icon(Icons.menu, size: 25),
+                          Container(
+                            padding: const EdgeInsets.all(7),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.favorite,
+                              size: 18,
+                              color: Colors.orangeAccent,
+                            ),
+                          ),
+                        ],
+                      ),
                       SizedBox(height: 25),
                       Text(
                         'What item are you\nlooking for?',
@@ -46,6 +69,12 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 CategoriesList(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Text('Products', style: AppStyles.styleSemiBold20),
+                ),
+                SizedBox(height: 10),
+                ProductsGrid(),
               ],
             );
           },

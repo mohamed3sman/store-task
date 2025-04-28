@@ -1,20 +1,60 @@
 import 'package:fake_store/core/network/shared.dart';
 import 'package:fake_store/features/home/domain/entities/category_entity.dart';
+import 'package:fake_store/features/home/domain/entities/product_entity.dart';
 import 'package:fake_store/features/home/domain/usecases/category_usecase.dart';
+import 'package:fake_store/features/home/domain/usecases/product_usecase.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   final CategoryUsecase categoryUsecase;
+  final ProductUsecase productUsecase;
   final SecureStorageService secureStorageService;
   final TextEditingController searchController = TextEditingController();
+
+  // Category related variables
   int? currentCategoryId;
+  String? currentCategoryName;
   List<CategoryEntity> categoriesList = [];
 
-  HomeCubit({required this.categoryUsecase, required this.secureStorageService})
-    : super(CategoryInitial()) {
+  // Products related variables
+  List<ProductEntity> productsList = [];
+  List<ProductEntity> previousFetchedList = [];
+  int currentPage = 1;
+  bool isLoading = false;
+  bool hasReachedMax = false;
+  late ScrollController scrollController;
+
+  final categoriesStringList = [
+    "all",
+    "tv",
+    "audio",
+    "laptop",
+    "mobile",
+    "gaming",
+    "appliances",
+  ];
+
+  HomeCubit({
+    required this.productUsecase,
+    required this.categoryUsecase,
+    required this.secureStorageService,
+  }) : super(HomeInitial()) {
+    scrollController = ScrollController();
+    scrollController.addListener(_scrollListener);
     getAllCategories();
+    getProducts();
+    initCategoryName();
+  }
+
+  void _scrollListener() {
+    if (scrollController.position.pixels >=
+        scrollController.position.maxScrollExtent - 200) {
+      if (!isLoading && !hasReachedMax) {
+        loadMoreProducts();
+      }
+    }
   }
 
   Future<void> getAllCategories() async {
@@ -34,8 +74,117 @@ class HomeCubit extends Cubit<HomeState> {
     );
   }
 
-  toggleCurrentCategory(int? categoryId) {
-    currentCategoryId = categoryId;
+  Future<void> getProducts() async {
+    if (isLoading) return;
+
+    isLoading = true;
+    currentPage = 1;
+    productsList = [];
+    previousFetchedList = [];
+    hasReachedMax = false;
+
+    emit(ProductsLoading());
+
+    final products = await productUsecase.execute(
+      page: currentPage,
+      category: currentCategoryName != 'all' ? currentCategoryName : null,
+    );
+
+    products.fold(
+      (failure) {
+        emit(ProductsFailure(failure.message));
+        isLoading = false;
+      },
+      (products) {
+        previousFetchedList = List.from(products);
+        productsList = products;
+        currentPage++;
+        emit(ProductsSuccess(productsList));
+        isLoading = false;
+      },
+    );
+  }
+
+  Future<void> loadMoreProducts() async {
+    if (isLoading || hasReachedMax) return;
+
+    isLoading = true;
+
+    // Emit loading state but keep current products visible
+    emit(ProductsMoreLoading(List.from(productsList)));
+
+    final products = await productUsecase.execute(
+      page: currentPage,
+      category: currentCategoryName != 'all' ? currentCategoryName : null,
+    );
+
+    products.fold(
+      (failure) {
+        emit(ProductsFailure(failure.message));
+        isLoading = false;
+      },
+      (newProducts) {
+        // Compare new products with previous fetched products to check if we've reached the end
+        // If the lists are identical or the new list is empty, we've reached the end
+        if (_areProductListsIdentical(previousFetchedList, newProducts) ||
+            newProducts.isEmpty) {
+          hasReachedMax = true;
+          emit(ProductsSuccess(List.from(productsList)));
+        } else {
+          previousFetchedList = List.from(newProducts);
+          productsList.addAll(newProducts);
+          currentPage++;
+          emit(ProductsSuccess(List.from(productsList)));
+        }
+        isLoading = false;
+      },
+    );
+  }
+
+  // Helper method to check if two product lists contain the same items
+  bool _areProductListsIdentical(
+    List<ProductEntity> list1,
+    List<ProductEntity> list2,
+  ) {
+    if (list1.length != list2.length) return false;
+
+    // Compare each product by its unique ID
+    for (int i = 0; i < list1.length; i++) {
+      // Assuming ProductEntity has an id field. Adjust based on your actual implementation
+      if (list1[i].id != list2[i].id) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  initCategoryName() {
+    currentCategoryName = categoriesStringList.first;
     emit(CategoryToggle());
+  }
+
+  toggleCurrentCategory(String? categoryName) {
+    currentCategoryName = categoryName;
+    resetAndRefreshProducts();
+    emit(CategoryToggle());
+
+    // Reset pagination and load new products when category changes
+  }
+
+  void resetAndRefreshProducts() {
+    currentPage = 1;
+    productsList = [];
+    previousFetchedList = [];
+    hasReachedMax = false;
+    getProducts();
+  }
+
+  @override
+  Future<void> close() {
+    scrollController.removeListener(_scrollListener);
+    scrollController.dispose();
+    searchController.dispose();
+    return super.close();
   }
 }
