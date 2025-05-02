@@ -10,6 +10,7 @@ abstract class HomeRemoteDataSource {
   Future<List<ProductEntity>> getAllProducts({
     required int? page,
     required String? category,
+    required bool? isSearchingNow,
   });
 }
 
@@ -39,14 +40,17 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   Future<List<ProductEntity>> getAllProducts({
     required int? page,
     required String? category,
+    required bool? isSearchingNow,
   }) async {
     try {
       final response = await DioHelper.getData(
         // url: '${AppConstants.baseUrl}/products',
         url:
-            category != null
-                ? 'https://fakestoreapi.in/api/products/category?type=$category'
-                : 'https://fakestoreapi.in/api/products?page=${page ?? 1}&limit=10',
+            isSearchingNow == false
+                ? category != null
+                    ? 'https://fakestoreapi.in/api/products/category?type=$category'
+                    : 'https://fakestoreapi.in/api/products?page=${page ?? 1}&limit=10'
+                : 'https://fakestoreapi.in/api/products',
       );
 
       if (response.statusCode == 200) {

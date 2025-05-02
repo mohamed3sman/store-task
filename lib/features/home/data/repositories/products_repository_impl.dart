@@ -12,11 +12,13 @@ class ProductsRepositoryImpl implements ProductRepository {
   Future<Either<Failure, List<ProductEntity>>> getProducts({
     required int? page,
     required String? category,
+    required bool? isSearchingNow,
   }) async {
     try {
       var productsList = await homeRemoteDataSource.getAllProducts(
         page: page,
         category: category,
+        isSearchingNow: isSearchingNow,
       );
       return right(productsList);
     } on Exception catch (e) {

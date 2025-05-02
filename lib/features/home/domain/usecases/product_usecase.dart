@@ -11,7 +11,12 @@ class ProductUsecase {
   Future<Either<Failure, List<ProductEntity>>> execute({
     required int? page,
     required String? category,
+    required bool? isSearchingNow,
   }) {
-    return repository.getProducts(page: page, category: category);
+    return repository.getProducts(
+      page: page,
+      category: category,
+      isSearchingNow: isSearchingNow,
+    );
   }
 }

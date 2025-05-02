@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fake_store/core/network/shared.dart';
 import 'package:fake_store/features/home/domain/entities/category_entity.dart';
 import 'package:fake_store/features/home/domain/entities/product_entity.dart';
@@ -20,11 +22,16 @@ class HomeCubit extends Cubit<HomeState> {
 
   // Products related variables
   List<ProductEntity> productsList = [];
+  List<ProductEntity> searchedProductsList = [];
   List<ProductEntity> previousFetchedList = [];
   int currentPage = 1;
   bool isLoading = false;
   bool hasReachedMax = false;
+  bool isSearchingNow = false;
   late ScrollController scrollController;
+  Timer? _debounce;
+  double selectedMinPrice = 0;
+  double selectedMaxPrice = 1000;
 
   final categoriesStringList = [
     "all",
@@ -76,16 +83,17 @@ class HomeCubit extends Cubit<HomeState> {
 
   Future<void> getProducts() async {
     if (isLoading) return;
-
     isLoading = true;
     currentPage = 1;
     productsList = [];
     previousFetchedList = [];
     hasReachedMax = false;
+    if (searchController.text.isEmpty) isSearchingNow = false;
 
     emit(ProductsLoading());
 
     final products = await productUsecase.execute(
+      isSearchingNow: isSearchingNow,
       page: currentPage,
       category: currentCategoryName != 'all' ? currentCategoryName : null,
     );
@@ -116,6 +124,7 @@ class HomeCubit extends Cubit<HomeState> {
     final products = await productUsecase.execute(
       page: currentPage,
       category: currentCategoryName != 'all' ? currentCategoryName : null,
+      isSearchingNow: isSearchingNow,
     );
 
     products.fold(
@@ -172,12 +181,13 @@ class HomeCubit extends Cubit<HomeState> {
     // Reset pagination and load new products when category changes
   }
 
-  void resetAndRefreshProducts() {
+  resetAndRefreshProducts() async {
     currentPage = 1;
     productsList = [];
     previousFetchedList = [];
     hasReachedMax = false;
-    getProducts();
+    searchController.clear();
+    await getProducts();
   }
 
   @override
@@ -186,5 +196,47 @@ class HomeCubit extends Cubit<HomeState> {
     scrollController.dispose();
     searchController.dispose();
     return super.close();
+  }
+
+  void onSearchProduct({String? query}) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+
+    _debounce = Timer(const Duration(milliseconds: 300), () async {
+      if (currentCategoryName == 'all') {
+        isSearchingNow = true;
+        await getProducts();
+      }
+      searchedProductsList =
+          productsList
+              .where(
+                (element) =>
+                    element.title!.toLowerCase().contains(query!.toLowerCase()),
+              )
+              .toList();
+
+      emit(ProductSearchStart());
+
+      if (searchController.text.isEmpty) {
+        if (currentCategoryName == 'all') {
+          isSearchingNow = false;
+          await getProducts();
+        }
+        emit(ProductSearchEnd());
+      }
+    });
+  }
+
+  void filterByPrice(double min, double max, BuildContext context) {
+    isSearchingNow = true;
+    selectedMinPrice = min;
+    selectedMaxPrice = max;
+
+    searchedProductsList =
+        productsList.where((product) {
+          final price = product.price ?? 0;
+          return price >= min && price <= max;
+        }).toList();
+    Navigator.pop(context);
+    emit(ProductSearchStart());
   }
 }

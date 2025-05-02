@@ -6,5 +6,6 @@ abstract class ProductRepository {
   Future<Either<Failure, List<ProductEntity>>> getProducts({
     required int? page,
     required String? category,
+    required bool? isSearchingNow,
   });
 }

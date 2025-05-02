@@ -20,13 +20,13 @@ class CustomButton extends StatelessWidget {
       onPressed: onPressed,
       color: AppColors.primaryColor,
       minWidth: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
       child:
           isLoading == false
               ? Text(
                 text,
-                style: AppStyles.styleMedium18.copyWith(color: Colors.white),
+                style: AppStyles.styleMedium16.copyWith(color: Colors.white),
               )
               : SizedBox(
                 width: 24,
