@@ -2,6 +2,7 @@ import 'package:fake_store/core/di/di.dart';
 import 'package:fake_store/core/shared/constants/app_colors.dart';
 import 'package:fake_store/core/shared/constants/app_images.dart';
 import 'package:fake_store/core/shared/constants/app_styles.dart';
+import 'package:fake_store/features/favourites/presentation/screen/favourites_screen.dart';
 import 'package:fake_store/features/home/presentation/cubit/home_cubit.dart';
 import 'package:fake_store/features/home/presentation/cubit/home_state.dart';
 import 'package:fake_store/features/home/presentation/screens/widgets/categories_list.dart';
@@ -44,16 +45,26 @@ class HomeScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Icon(Icons.menu, size: 25),
-                            Container(
-                              padding: const EdgeInsets.all(7),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[300],
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                Icons.favorite,
-                                size: 18,
-                                color: Colors.orangeAccent,
+                            GestureDetector(
+                              onTap:
+                                  () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) => FavoriteProductsScreen(),
+                                    ),
+                                  ),
+                              child: Container(
+                                padding: const EdgeInsets.all(7),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.favorite,
+                                  size: 18,
+                                  color: Colors.orangeAccent,
+                                ),
                               ),
                             ),
                           ],

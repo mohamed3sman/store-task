@@ -7,6 +7,7 @@ class ProductsModel extends ProductEntity {
 
   ProductsModel({this.status, this.message, this.products})
     : super(
+        isFavourite: false,
         brand: products?[0].brand,
         category: products?[0].category,
         color: products?[0].color,
@@ -48,6 +49,7 @@ class OneProduct {
   int? discount;
   bool? popular;
   bool? onSale;
+  bool? isFavourite;
 
   OneProduct({
     this.id,
@@ -56,6 +58,7 @@ class OneProduct {
     this.price,
     this.description,
     this.brand,
+    this.isFavourite,
     this.model,
     this.color,
     this.category,
@@ -77,6 +80,7 @@ class OneProduct {
     discount: json['discount'] as int?,
     popular: json['popular'] as bool?,
     onSale: json['onSale'] as bool?,
+    isFavourite: false,
   );
 
   Map<String, dynamic> toJson() => {
@@ -95,6 +99,7 @@ class OneProduct {
   };
 
   ProductEntity toEntity() => ProductEntity(
+    isFavourite: isFavourite,
     brand: brand,
     color: color,
     discount: discount,

@@ -1,4 +1,6 @@
+import 'package:fake_store/core/network/product_service.dart';
 import 'package:fake_store/core/network/shared.dart';
+import 'package:fake_store/features/favourites/presentation/cubit/favourites_cubit.dart';
 import 'package:fake_store/features/home/data/data_source/home_remote_data_source.dart';
 import 'package:fake_store/features/home/data/repositories/category_repository_impl.dart';
 import 'package:fake_store/features/home/data/repositories/products_repository_impl.dart';
@@ -34,6 +36,7 @@ Future<void> init() async {
   // Use cases
   sl.registerLazySingleton(() => CategoryUsecase(sl()));
   sl.registerLazySingleton(() => ProductUsecase(sl()));
+  sl.registerLazySingleton<ProductService>(() => ProductService());
 
   // Repository
   sl.registerLazySingleton<HomeRemoteDataSource>(
@@ -65,4 +68,5 @@ Future<void> init() async {
       productUsecase: sl(),
     ),
   );
+  sl.registerFactory(() => FavouritesCubit(sl<ProductService>()));
 }

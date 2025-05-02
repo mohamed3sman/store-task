@@ -1,36 +1,44 @@
-// import 'package:fake_store/features/home/data/models/product.dart';
+import 'package:hive/hive.dart';
 
-// class ProductEntity {
-//   final int? id;
-//   final String? title;
-//   final int? price;
-//   final String? description;
-//   final ProductCategory? category;
-//   final List<dynamic>? images;
+part 'product_entity.g.dart';
 
-//   ProductEntity({
-//     required this.id,
-//     required this.title,
-//     required this.price,
-//     required this.description,
-//     required this.category,
-//     required this.images,
-//   });
-// }
-
-class ProductEntity {
+@HiveType(typeId: 0)
+class ProductEntity extends HiveObject {
+  @HiveField(0)
   final int? id;
+
+  @HiveField(1)
   final String? title;
+
+  @HiveField(2)
   final int? price;
+
+  @HiveField(3)
   final String? description;
+
+  @HiveField(4)
   final String? category;
+
+  @HiveField(5)
   final String? images;
+
+  @HiveField(6)
   final String? brand;
+
+  @HiveField(7)
   final String? model;
+
+  @HiveField(8)
   final String? color;
+
+  @HiveField(9)
   final num? discount;
 
+  @HiveField(10)
+  bool? isFavourite;
+
   ProductEntity({
+    required this.isFavourite,
     required this.brand,
     required this.model,
     required this.color,
