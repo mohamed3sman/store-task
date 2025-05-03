@@ -43,3 +43,5 @@ class CategoryToggle extends HomeState {}
 class ProductSearchStart extends HomeState {}
 
 class ProductSearchEnd extends HomeState {}
+
+class ThemeModeChanged extends HomeState {}

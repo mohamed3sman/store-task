@@ -41,7 +41,7 @@ class ProductItem extends StatelessWidget {
           child: Column(
             children: [
               SizedBox(
-                height: 150,
+                height: 130,
                 child: Hero(
                   tag: product.id!,
                   child: CachedNetworkImage(
@@ -63,7 +63,7 @@ class ProductItem extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 15),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 7),
                 child: Column(

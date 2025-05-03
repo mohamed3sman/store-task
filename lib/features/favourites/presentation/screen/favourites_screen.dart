@@ -1,5 +1,6 @@
 import 'package:fake_store/core/di/di.dart';
 import 'package:fake_store/core/network/product_service.dart';
+import 'package:fake_store/core/shared/constants/app_colors.dart';
 import 'package:fake_store/core/shared/constants/app_constants.dart';
 import 'package:fake_store/core/shared/constants/app_styles.dart';
 import 'package:fake_store/features/favourites/presentation/cubit/favourites_cubit.dart';
@@ -86,7 +87,9 @@ class FavoriteProductsScreen extends StatelessWidget {
                       ),
                       title: Text(
                         product.title ?? 'Unknown',
-                        style: AppStyles.styleMedium16,
+                        style: AppStyles.styleMedium16.copyWith(
+                          color: AppColors.primaryColor,
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),

@@ -45,27 +45,36 @@ class HomeScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Icon(Icons.menu, size: 25),
-                            GestureDetector(
-                              onTap:
-                                  () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder:
-                                          (context) => FavoriteProductsScreen(),
+                            Row(
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.brightness_6),
+                                  onPressed: cubit.toggleThemeMode,
+                                ),
+                                GestureDetector(
+                                  onTap:
+                                      () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) =>
+                                                  FavoriteProductsScreen(),
+                                        ),
+                                      ),
+                                  child: Container(
+                                    padding: const EdgeInsets.all(7),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[300],
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      Icons.favorite,
+                                      size: 18,
+                                      color: Colors.orangeAccent,
                                     ),
                                   ),
-                              child: Container(
-                                padding: const EdgeInsets.all(7),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[300],
-                                  shape: BoxShape.circle,
                                 ),
-                                child: Icon(
-                                  Icons.favorite,
-                                  size: 18,
-                                  color: Colors.orangeAccent,
-                                ),
-                              ),
+                              ],
                             ),
                           ],
                         ),

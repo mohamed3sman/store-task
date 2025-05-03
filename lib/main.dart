@@ -2,6 +2,7 @@ import 'package:fake_store/core/shared/constants/app_constants.dart';
 import 'package:fake_store/features/favourites/presentation/cubit/favourites_cubit.dart';
 import 'package:fake_store/features/home/domain/entities/product_entity.dart';
 import 'package:fake_store/features/home/presentation/cubit/home_cubit.dart';
+import 'package:fake_store/features/home/presentation/cubit/home_state.dart';
 import 'package:fake_store/features/home/presentation/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,11 +31,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Login Demo',
-      home: HomeScreen(),
-      navigatorKey: AppConstants.navigatorKey,
+    final isDark = context.read<HomeCubit>().isDarkMode;
+    return BlocBuilder<HomeCubit, HomeState>(
+      builder: (context, state) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData.light(),
+          darkTheme: ThemeData.dark(),
+          themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
+          home: HomeScreen(),
+          navigatorKey: AppConstants.navigatorKey,
+        );
+      },
     );
   }
 }

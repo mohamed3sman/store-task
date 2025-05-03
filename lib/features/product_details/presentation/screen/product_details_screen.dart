@@ -6,6 +6,7 @@ import 'package:fake_store/core/shared/constants/app_styles.dart';
 import 'package:fake_store/core/shared/widgets/custom_button.dart';
 import 'package:fake_store/features/favourites/presentation/cubit/favourites_cubit.dart';
 import 'package:fake_store/features/favourites/presentation/cubit/favourites_state.dart';
+import 'package:fake_store/features/home/presentation/cubit/home_cubit.dart';
 import 'package:fake_store/features/product_details/presentation/cubit/product_details_cubit.dart';
 import 'package:fake_store/features/product_details/presentation/cubit/product_details_state.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,10 @@ class ProductDetailsScreen extends StatelessWidget {
       child: BlocBuilder<FavouritesCubit, FavouritesState>(
         builder: (context, state) {
           return Scaffold(
-            backgroundColor: Colors.white,
+            backgroundColor:
+                context.read<HomeCubit>().isDarkMode
+                    ? Colors.black
+                    : Colors.white,
             body: Stack(
               children: [
                 ListView(
@@ -71,7 +75,10 @@ class ProductDetailsScreen extends StatelessWidget {
                                 child: Text(
                                   product.title ?? "No Title",
                                   style: AppStyles.styleMedium18.copyWith(
-                                    color: AppColors.primaryColor,
+                                    color:
+                                        context.read<HomeCubit>().isDarkMode
+                                            ? Colors.white
+                                            : AppColors.primaryColor,
                                   ),
                                 ),
                               ),
@@ -127,7 +134,10 @@ class ProductDetailsScreen extends StatelessWidget {
                           Text(
                             product.brand ?? '',
                             style: AppStyles.styleMedium16.copyWith(
-                              color: AppColors.mediumColor,
+                              color:
+                                  context.read<HomeCubit>().isDarkMode
+                                      ? Colors.white
+                                      : AppColors.mediumColor,
                             ),
                           ),
                           const SizedBox(height: 20),
@@ -143,7 +153,10 @@ class ProductDetailsScreen extends StatelessWidget {
                               color: Colors.red,
                             ),
                             moreStyle: AppStyles.styleMedium16.copyWith(
-                              color: AppColors.primaryColor,
+                              color:
+                                  context.read<HomeCubit>().isDarkMode
+                                      ? Colors.orangeAccent
+                                      : AppColors.primaryColor,
                             ),
                           ),
                           // Text(
@@ -165,7 +178,10 @@ class ProductDetailsScreen extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.bottomCenter,
                     child: Container(
-                      color: Colors.white,
+                      color:
+                          context.read<HomeCubit>().isDarkMode
+                              ? Colors.transparent
+                              : Colors.white,
                       padding: EdgeInsets.all(10),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -183,7 +199,9 @@ class ProductDetailsScreen extends StatelessWidget {
                                   ),
                                   Text(
                                     "\$${product.price ?? 0}",
-                                    style: AppStyles.styleMedium20,
+                                    style: AppStyles.styleMedium20.copyWith(
+                                      color: AppColors.primaryColor,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -217,7 +235,10 @@ class ProductDetailsScreen extends StatelessWidget {
                                           ),
                                         ),
                                         SizedBox(width: 10),
-                                        Text(cubit.counter.toString()),
+                                        Text(
+                                          cubit.counter.toString(),
+                                          style: TextStyle(color: Colors.black),
+                                        ),
                                         SizedBox(width: 10),
                                         GestureDetector(
                                           onTap:

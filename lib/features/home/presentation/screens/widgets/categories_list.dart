@@ -1,3 +1,4 @@
+import 'package:fake_store/core/shared/constants/app_colors.dart';
 import 'package:fake_store/core/shared/constants/app_styles.dart';
 import 'package:fake_store/features/home/presentation/cubit/home_cubit.dart';
 import 'package:fake_store/features/home/presentation/cubit/home_state.dart';
@@ -110,6 +111,8 @@ class CategoriesList extends StatelessWidget {
                           color:
                               cubit.currentCategoryName == category
                                   ? Colors.orangeAccent
+                                  : context.read<HomeCubit>().isDarkMode
+                                  ? AppColors.primaryColor
                                   : Colors.black,
                         ),
                       ),
