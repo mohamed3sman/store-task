@@ -1,12 +1,15 @@
 import 'dart:async';
 
 import 'package:fake_store/core/network/shared.dart';
+import 'package:fake_store/core/shared/constants/app_constants.dart';
+import 'package:fake_store/core/shared/functions/save_data.dart';
 import 'package:fake_store/features/home/domain/entities/category_entity.dart';
 import 'package:fake_store/features/home/domain/entities/product_entity.dart';
 import 'package:fake_store/features/home/domain/usecases/category_usecase.dart';
 import 'package:fake_store/features/home/domain/usecases/product_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
@@ -84,13 +87,13 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   Future<void> getProducts() async {
-    if (isLoading) return;
+    // if (isLoading) return;
     isLoading = true;
     currentPage = 1;
     productsList = [];
     previousFetchedList = [];
     hasReachedMax = false;
-    if (searchController.text.isEmpty) isSearchingNow = false;
+    // if (searchController.text.isEmpty) isSearchingNow = false;
 
     emit(ProductsLoading());
 
@@ -103,16 +106,31 @@ class HomeCubit extends Cubit<HomeState> {
     products.fold(
       (failure) {
         emit(ProductsFailure(failure.message));
-        isLoading = false;
       },
       (products) {
         previousFetchedList = List.from(products);
         productsList = products;
         currentPage++;
-        emit(ProductsSuccess(productsList));
         isLoading = false;
+        emit(ProductsSuccess(productsList));
       },
     );
+    if (products.isLeft()) {
+      var box = Hive.box<ProductEntity>(AppConstants.cachedProducts);
+      productsList =
+          currentCategoryName == 'all'
+              ? box.values.toList()
+              : box.values
+                  .toList()
+                  .where((element) => element.category == currentCategoryName)
+                  .toList();
+    } else {
+      if (currentCategoryName == 'all') {
+        var box = Hive.box<ProductEntity>(AppConstants.cachedProducts);
+        box.clear();
+        saveData(productsList, AppConstants.cachedProducts);
+      }
+    }
   }
 
   Future<void> loadMoreProducts() async {
@@ -141,6 +159,9 @@ class HomeCubit extends Cubit<HomeState> {
         } else {
           previousFetchedList = List.from(newProducts);
           productsList.addAll(newProducts);
+          var box = Hive.box<ProductEntity>(AppConstants.cachedProducts);
+          box.clear();
+          saveData(productsList, AppConstants.cachedProducts);
           currentPage++;
           emit(ProductsSuccess(List.from(productsList)));
         }
@@ -218,20 +239,6 @@ class HomeCubit extends Cubit<HomeState> {
         emit(ProductSearchEnd());
       }
     });
-  }
-
-  void filterByPrice(double min, double max, BuildContext context) {
-    isSearchingNow = true;
-    selectedMinPrice = min;
-    selectedMaxPrice = max;
-
-    searchedProductsList =
-        productsList.where((product) {
-          final price = product.price ?? 0;
-          return price >= min && price <= max;
-        }).toList();
-    Navigator.pop(context);
-    emit(ProductSearchStart());
   }
 
   void toggleThemeMode() {

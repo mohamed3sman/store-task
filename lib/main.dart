@@ -12,7 +12,10 @@ import 'core/di/di.dart' as di;
 void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(ProductEntityAdapter());
-  await Hive.openBox<ProductEntity>(AppConstants.products);
+  await Hive.openBox<ProductEntity>(AppConstants.favorites);
+  await Hive.openBox<ProductEntity>(AppConstants.cachedProducts);
+  // if internet id here
+  // Hive.box<ProductEntity>(AppConstants.cachedProducts).clear();
   WidgetsFlutterBinding.ensureInitialized();
   await di.init();
   runApp(

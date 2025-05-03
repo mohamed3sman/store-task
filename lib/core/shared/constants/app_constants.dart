@@ -6,5 +6,6 @@ abstract class AppConstants {
   static const String graphqlUrl = "https://api.escuelajs.co/graphql";
   static const Duration connectionTimeout = Duration(seconds: 30);
   static const Duration receiveTimeout = Duration(seconds: 30);
-  static const String products = 'products';
+  static const String favorites = 'favorites';
+  static const String cachedProducts = 'cachedProducts';
 }

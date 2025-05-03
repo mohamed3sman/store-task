@@ -44,4 +44,6 @@ class ProductSearchStart extends HomeState {}
 
 class ProductSearchEnd extends HomeState {}
 
+class FilterByPriceSlider extends HomeState {}
+
 class ThemeModeChanged extends HomeState {}

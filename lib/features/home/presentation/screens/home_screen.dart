@@ -1,13 +1,11 @@
 import 'package:fake_store/core/di/di.dart';
 import 'package:fake_store/core/shared/constants/app_colors.dart';
-import 'package:fake_store/core/shared/constants/app_images.dart';
 import 'package:fake_store/core/shared/constants/app_styles.dart';
 import 'package:fake_store/features/favourites/presentation/screen/favourites_screen.dart';
 import 'package:fake_store/features/home/presentation/cubit/home_cubit.dart';
 import 'package:fake_store/features/home/presentation/cubit/home_state.dart';
 import 'package:fake_store/features/home/presentation/screens/widgets/categories_list.dart';
 import 'package:fake_store/core/shared/widgets/custom_search_bar.dart';
-import 'package:fake_store/features/home/presentation/screens/widgets/price_filter_slider.dart';
 import 'package:fake_store/features/home/presentation/screens/widgets/products_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -98,33 +96,33 @@ class HomeScreen extends StatelessWidget {
                                     () => cubit.resetAndRefreshProducts(),
                               ),
                             ),
-                            SizedBox(width: 10),
-                            GestureDetector(
-                              onTap: () {
-                                showModalBottomSheet(
-                                  context: context,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(20),
-                                    ),
-                                  ),
-                                  builder:
-                                      (context) => const PriceFilterSlider(),
-                                );
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[200],
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                child: Image.asset(
-                                  AppImages.filter,
-                                  width: 25,
-                                  height: 25,
-                                ),
-                              ),
-                            ),
+                            // SizedBox(width: 10),
+                            // GestureDetector(
+                            //   // onTap: () {
+                            //   //   showModalBottomSheet(
+                            //   //     context: context,
+                            //   //     shape: RoundedRectangleBorder(
+                            //   //       borderRadius: BorderRadius.vertical(
+                            //   //         top: Radius.circular(20),
+                            //   //       ),
+                            //   //     ),
+                            //   //     builder:
+                            //   //         (context) => const PriceFilterSlider(),
+                            //   //   );
+                            //   // },
+                            //   child: Container(
+                            //     padding: EdgeInsets.all(12),
+                            //     decoration: BoxDecoration(
+                            //       color: Colors.grey[200],
+                            //       borderRadius: BorderRadius.circular(5),
+                            //     ),
+                            //     child: Image.asset(
+                            //       AppImages.filter,
+                            //       width: 25,
+                            //       height: 25,
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
                         SizedBox(height: 25),

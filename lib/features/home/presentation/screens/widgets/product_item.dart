@@ -51,11 +51,11 @@ class ProductItem extends StatelessWidget {
                         (context, url) => Padding(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 40,
-                            vertical: 57,
+                            vertical: 47,
                           ),
                           child: const CircularProgressIndicator(
                             color: Colors.orangeAccent,
-                            strokeWidth: 2,
+                            strokeWidth: 2.5,
                           ),
                         ),
                     errorWidget:

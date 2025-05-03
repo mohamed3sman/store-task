@@ -18,7 +18,7 @@ class FavoriteProductsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Box<ProductEntity> favoritesBox = Hive.box<ProductEntity>(
-      AppConstants.products,
+      AppConstants.favorites,
     );
 
     return BlocBuilder<FavouritesCubit, FavouritesState>(

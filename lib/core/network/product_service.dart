@@ -8,7 +8,7 @@ class ProductService {
   ProductService._internal();
 
   final Box<ProductEntity> _productBox = Hive.box<ProductEntity>(
-    AppConstants.products,
+    AppConstants.favorites,
   );
 
   Future<void> addProduct(ProductEntity product) async {
