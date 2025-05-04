@@ -30,19 +30,12 @@ class CustomReactiveTextField extends StatelessWidget {
       cursorColor: AppColors.mediumColor,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: AppStyles.styleMedium18.copyWith(
-          color: AppColors.primaryColor, // اللون الطبيعي للـ label لما مش فوكست
-        ),
-        floatingLabelStyle: AppStyles.styleMedium18.copyWith(
-          color: AppColors.primaryColor, // اللون لما الفوكست بيحصل
-        ),
+        labelStyle: AppStyles.styleMedium18,
+        floatingLabelStyle: AppStyles.styleMedium18,
         contentPadding: EdgeInsets.zero,
         border: const UnderlineInputBorder(),
         focusedBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: AppColors.primaryColor, // لون البوردر لما يكون focused
-            width: 2,
-          ),
+          borderSide: BorderSide(color: AppColors.primaryColor, width: 2),
         ),
         suffixIcon:
             showEyeIcon

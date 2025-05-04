@@ -15,8 +15,7 @@ class ProductsGrid extends StatelessWidget {
       builder: (context, state) {
         final cubit = context.read<HomeCubit>();
         final bool isPaginating = state is ProductsMoreLoading;
-        final bool isLoading =
-            state is ProductsLoading || state is CategoryToggle;
+        final bool isLoading = cubit.isLoading && isPaginating == false;
         List<ProductEntity> productsList =
             state is ProductSearchStart
                 ? cubit.searchedProductsList
@@ -63,14 +62,14 @@ class ProductsGrid extends StatelessWidget {
                   top: MediaQuery.sizeOf(context).height * 0.2,
                 ),
                 child:
-                    isLoading
-                        ? CircularProgressIndicator(color: Colors.orangeAccent)
-                        : Text(
+                    isLoading == false && productsList.isEmpty
+                        ? Text(
                           'No products found',
                           style: AppStyles.styleMedium18.copyWith(
                             color: Colors.orangeAccent,
                           ),
-                        ),
+                        )
+                        : CircularProgressIndicator(color: Colors.orangeAccent),
               ),
             );
       },

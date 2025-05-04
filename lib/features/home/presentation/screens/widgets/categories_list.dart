@@ -1,5 +1,6 @@
 import 'package:fake_store/core/shared/constants/app_colors.dart';
 import 'package:fake_store/core/shared/constants/app_styles.dart';
+import 'package:fake_store/core/shared/constants/theme_cubit.dart';
 import 'package:fake_store/features/home/presentation/cubit/home_cubit.dart';
 import 'package:fake_store/features/home/presentation/cubit/home_state.dart';
 import 'package:flutter/material.dart';
@@ -105,16 +106,20 @@ class CategoriesList extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        cubit.categoriesStringList[index],
-                        style: AppStyles.styleMedium18.copyWith(
-                          color:
-                              cubit.currentCategoryName == category
-                                  ? Colors.orangeAccent
-                                  : context.read<HomeCubit>().isDarkMode
-                                  ? AppColors.primaryColor
-                                  : Colors.black,
-                        ),
+                      BlocBuilder<ThemeCubit, ThemeData>(
+                        builder: (context, state) {
+                          return Text(
+                            cubit.categoriesStringList[index],
+                            style: AppStyles.styleMedium18.copyWith(
+                              color:
+                                  cubit.currentCategoryName == category
+                                      ? Colors.orangeAccent
+                                      : context.read<ThemeCubit>().isLightTheme
+                                      ? AppColors.primaryColor
+                                      : Colors.white,
+                            ),
+                          );
+                        },
                       ),
                       AnimatedContainer(
                         decoration: BoxDecoration(

@@ -1,7 +1,8 @@
+import 'package:fake_store/core/config/app_pages.dart';
 import 'package:fake_store/core/di/di.dart';
-import 'package:fake_store/core/shared/constants/app_colors.dart';
+import 'package:fake_store/core/shared/constants/app_constants.dart';
 import 'package:fake_store/core/shared/constants/app_styles.dart';
-import 'package:fake_store/features/favourites/presentation/screen/favourites_screen.dart';
+import 'package:fake_store/core/shared/constants/theme_cubit.dart';
 import 'package:fake_store/features/home/presentation/cubit/home_cubit.dart';
 import 'package:fake_store/features/home/presentation/cubit/home_state.dart';
 import 'package:fake_store/features/home/presentation/screens/widgets/categories_list.dart';
@@ -9,6 +10,7 @@ import 'package:fake_store/core/shared/widgets/custom_search_bar.dart';
 import 'package:fake_store/features/home/presentation/screens/widgets/products_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -25,7 +27,8 @@ class HomeScreen extends StatelessWidget {
             return RefreshIndicator(
               onRefresh: () => cubit.resetAndRefreshProducts(),
               displacement: 70,
-              color: AppColors.mediumColor,
+              color: Colors.orangeAccent,
+              backgroundColor: Colors.white,
               child: ListView(
                 controller:
                     state is ProductSearchStart ? null : cubit.scrollController,
@@ -45,19 +48,56 @@ class HomeScreen extends StatelessWidget {
                             Icon(Icons.menu, size: 25),
                             Row(
                               children: [
-                                IconButton(
-                                  icon: Icon(Icons.brightness_6),
-                                  onPressed: cubit.toggleThemeMode,
+                                BlocBuilder<ThemeCubit, ThemeData>(
+                                  builder: (context, state) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        context
+                                            .read<ThemeCubit>()
+                                            .toggleTheme();
+                                      },
+                                      child: AnimatedSwitcher(
+                                        duration: const Duration(
+                                          milliseconds: 300,
+                                        ),
+                                        transitionBuilder: (child, animation) {
+                                          return RotationTransition(
+                                            turns:
+                                                child.key ==
+                                                        const ValueKey('light')
+                                                    ? Tween<double>(
+                                                      begin: 1,
+                                                      end: 0.75,
+                                                    ).animate(animation)
+                                                    : Tween<double>(
+                                                      begin: 0.75,
+                                                      end: 1,
+                                                    ).animate(animation),
+                                            child: FadeTransition(
+                                              opacity: animation,
+                                              child: child,
+                                            ),
+                                          );
+                                        },
+                                        child: Icon(
+                                          state.brightness == Brightness.light
+                                              ? Icons.dark_mode
+                                              : Icons.light_mode_outlined,
+                                          key: ValueKey(
+                                            state.brightness == Brightness.light
+                                                ? 'dark'
+                                                : 'light',
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
+                                SizedBox(width: 12),
                                 GestureDetector(
                                   onTap:
-                                      () => Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder:
-                                              (context) =>
-                                                  FavoriteProductsScreen(),
-                                        ),
+                                      () => AppConstants.ctx?.push(
+                                        Routes.favorites,
                                       ),
                                   child: Container(
                                     padding: const EdgeInsets.all(7),

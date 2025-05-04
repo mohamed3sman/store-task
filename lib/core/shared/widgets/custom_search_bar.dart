@@ -26,6 +26,7 @@ class CustomSearchBar extends StatelessWidget {
         cursorColor: Colors.orangeAccent,
         controller: controller,
         onChanged: onChanged,
+        style: AppStyles.styleRegular16.copyWith(color: AppColors.primaryColor),
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.only(top: 12),
           suffixIcon: GestureDetector(

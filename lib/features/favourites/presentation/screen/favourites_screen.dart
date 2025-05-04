@@ -1,3 +1,4 @@
+import 'package:fake_store/core/config/app_pages.dart';
 import 'package:fake_store/core/di/di.dart';
 import 'package:fake_store/core/network/product_service.dart';
 import 'package:fake_store/core/shared/constants/app_colors.dart';
@@ -5,9 +6,9 @@ import 'package:fake_store/core/shared/constants/app_constants.dart';
 import 'package:fake_store/core/shared/constants/app_styles.dart';
 import 'package:fake_store/features/favourites/presentation/cubit/favourites_cubit.dart';
 import 'package:fake_store/features/favourites/presentation/cubit/favourites_state.dart';
-import 'package:fake_store/features/product_details/presentation/screen/product_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fake_store/features/home/domain/entities/product_entity.dart';
@@ -154,13 +155,9 @@ class FavoriteProductsScreen extends StatelessWidget {
                         ],
                       ),
                       onTap:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) =>
-                                      ProductDetailsScreen(product: product),
-                            ),
+                          () => AppConstants.ctx?.push(
+                            Routes.productDetails,
+                            extra: product,
                           ),
                     ),
                   );

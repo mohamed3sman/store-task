@@ -112,8 +112,7 @@ double getResponsiveFontSize({required double fontSize}) {
 }
 
 double getScaleFactor() {
-  double width =
-      MediaQuery.sizeOf(AppConstants.navigatorKey.currentContext!).width;
+  double width = MediaQuery.sizeOf(AppConstants.ctx!).width;
   if (width < 600) {
     return width / 400;
   } else if (width < 900) {

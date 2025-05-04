@@ -1,5 +1,4 @@
 import 'package:fake_store/core/di/di.dart';
-import 'package:fake_store/core/shared/constants/app_colors.dart';
 import 'package:fake_store/core/shared/constants/app_images.dart';
 import 'package:fake_store/core/shared/constants/app_styles.dart';
 import 'package:fake_store/core/shared/widgets/custom_button.dart';
@@ -24,7 +23,7 @@ class LoginScreen extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                    'Login Successful: ${state.user.token}',
+                    'Login Successful and token saved securely',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w500,
@@ -59,23 +58,14 @@ class LoginScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 60),
-                    Text(
-                      'Login Now...',
-                      style: AppStyles.styleMedium20.copyWith(
-                        color: Colors.black,
-                        fontSize: getResponsiveFontSize(fontSize: 24),
-                      ),
-                    ),
+                    Text('Login Now...', style: AppStyles.styleMedium20),
                     const SizedBox(height: 7),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           'Start your shopping journey!',
-                          style: AppStyles.styleMedium20.copyWith(
-                            color: Colors.black,
-                            fontSize: getResponsiveFontSize(fontSize: 24),
-                          ),
+                          style: AppStyles.styleMedium20,
                         ),
                         Image.asset(AppImages.shirt, width: 27),
                       ],
@@ -144,16 +134,6 @@ class LoginScreen extends StatelessWidget {
                       },
                     ),
 
-                    const SizedBox(height: 15),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          'Forgot Password?',
-                          style: AppStyles.styleRegular16,
-                        ),
-                      ],
-                    ),
                     const SizedBox(height: 25),
                     CustomButton(
                       text: 'Login',
@@ -161,30 +141,6 @@ class LoginScreen extends StatelessWidget {
                       onPressed: () => cubit.loginButtonPressed(context),
                     ),
                     const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          "Don't have an account? ",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {},
-                          child: Text(
-                            'Signup',
-                            style: TextStyle(
-                              fontSize: 15.5,
-                              color: AppColors.primaryColor,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 15),
                   ],
                 ),
               ),

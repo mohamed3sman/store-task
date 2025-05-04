@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fake_store/core/config/app_pages.dart';
 import 'package:fake_store/core/di/di.dart';
 import 'package:fake_store/core/network/product_service.dart';
 import 'package:fake_store/core/shared/constants/app_colors.dart';
@@ -6,9 +7,9 @@ import 'package:fake_store/core/shared/constants/app_styles.dart';
 import 'package:fake_store/features/favourites/presentation/cubit/favourites_cubit.dart';
 import 'package:fake_store/features/favourites/presentation/cubit/favourites_state.dart';
 import 'package:fake_store/features/home/domain/entities/product_entity.dart';
-import 'package:fake_store/features/product_details/presentation/screen/product_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class ProductItem extends StatelessWidget {
   const ProductItem({
@@ -23,14 +24,7 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => ProductDetailsScreen(product: product),
-          ),
-        );
-      },
+      onTap: () => context.push(Routes.productDetails, extra: product),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(5),
         child: Container(

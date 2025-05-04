@@ -3,6 +3,7 @@ import 'package:fake_store/core/di/di.dart';
 import 'package:fake_store/core/network/product_service.dart';
 import 'package:fake_store/core/shared/constants/app_colors.dart';
 import 'package:fake_store/core/shared/constants/app_styles.dart';
+import 'package:fake_store/core/shared/constants/theme_cubit.dart';
 import 'package:fake_store/core/shared/widgets/custom_button.dart';
 import 'package:fake_store/features/favourites/presentation/cubit/favourites_cubit.dart';
 import 'package:fake_store/features/favourites/presentation/cubit/favourites_state.dart';
@@ -15,9 +16,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readmore/readmore.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
-  final ProductEntity product;
+  final ProductEntity? product;
 
-  const ProductDetailsScreen({super.key, required this.product});
+  const ProductDetailsScreen({super.key, this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +30,9 @@ class ProductDetailsScreen extends StatelessWidget {
         builder: (context, state) {
           return Scaffold(
             backgroundColor:
-                context.read<HomeCubit>().isDarkMode
-                    ? Colors.black
-                    : Colors.white,
+                context.read<ThemeCubit>().isLightTheme
+                    ? Colors.white
+                    : Colors.black,
             body: Stack(
               children: [
                 ListView(
@@ -39,9 +40,9 @@ class ProductDetailsScreen extends StatelessWidget {
                     Stack(
                       children: [
                         Hero(
-                          tag: product.id!,
+                          tag: product!.id!,
                           child: CachedNetworkImage(
-                            imageUrl: product.images ?? '',
+                            imageUrl: product!.images ?? '',
                             height: MediaQuery.sizeOf(context).height * 0.45,
                             fit: BoxFit.fitWidth,
                             width: double.infinity,
@@ -73,12 +74,12 @@ class ProductDetailsScreen extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: Text(
-                                  product.title ?? "No Title",
+                                  product!.title ?? "No Title",
                                   style: AppStyles.styleMedium18.copyWith(
                                     color:
-                                        context.read<HomeCubit>().isDarkMode
-                                            ? Colors.white
-                                            : AppColors.primaryColor,
+                                        context.read<ThemeCubit>().isLightTheme
+                                            ? AppColors.primaryColor
+                                            : Colors.white,
                                   ),
                                 ),
                               ),
@@ -87,15 +88,15 @@ class ProductDetailsScreen extends StatelessWidget {
                                 onTap:
                                     () =>
                                         productService.isProductFavorite(
-                                              product.id!,
+                                              product!.id!,
                                             )
                                             ? favouriteCubit
                                                 .removeProductFromFavourites(
-                                                  product,
+                                                  product!,
                                                 )
                                             : favouriteCubit
                                                 .addProductToFavourites(
-                                                  product,
+                                                  product!,
                                                 ),
                                 child: Container(
                                   padding: const EdgeInsets.all(7),
@@ -113,13 +114,13 @@ class ProductDetailsScreen extends StatelessWidget {
                                     },
                                     child: Icon(
                                       productService.isProductFavorite(
-                                            product.id!,
+                                            product!.id!,
                                           )
                                           ? Icons.favorite
                                           : Icons.favorite_border_rounded,
                                       key: ValueKey(
                                         productService.isProductFavorite(
-                                          product.id!,
+                                          product!.id!,
                                         ),
                                       ),
                                       size: 20,
@@ -132,17 +133,17 @@ class ProductDetailsScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 10),
                           Text(
-                            product.brand ?? '',
+                            product!.brand ?? '',
                             style: AppStyles.styleMedium16.copyWith(
                               color:
-                                  context.read<HomeCubit>().isDarkMode
-                                      ? Colors.white
-                                      : AppColors.mediumColor,
+                                  context.read<HomeCubit>().isSearchingNow
+                                      ? AppColors.primaryColor
+                                      : Colors.white,
                             ),
                           ),
                           const SizedBox(height: 20),
                           ReadMoreText(
-                            '${product.description} ',
+                            '${product!.description} ',
                             trimMode: TrimMode.Line,
                             trimLines: 3,
                             style: AppStyles.styleRegular14,
@@ -154,9 +155,9 @@ class ProductDetailsScreen extends StatelessWidget {
                             ),
                             moreStyle: AppStyles.styleMedium16.copyWith(
                               color:
-                                  context.read<HomeCubit>().isDarkMode
-                                      ? Colors.orangeAccent
-                                      : AppColors.primaryColor,
+                                  context.read<ThemeCubit>().isLightTheme
+                                      ? AppColors.primaryColor
+                                      : Colors.orangeAccent,
                             ),
                           ),
                           // Text(
@@ -179,9 +180,9 @@ class ProductDetailsScreen extends StatelessWidget {
                     alignment: Alignment.bottomCenter,
                     child: Container(
                       color:
-                          context.read<HomeCubit>().isDarkMode
-                              ? Colors.transparent
-                              : Colors.white,
+                          context.read<ThemeCubit>().isLightTheme
+                              ? Colors.white
+                              : Colors.black,
                       padding: EdgeInsets.all(10),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -198,9 +199,14 @@ class ProductDetailsScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    "\$${product.price ?? 0}",
+                                    "\$${product!.price ?? 0}",
                                     style: AppStyles.styleMedium20.copyWith(
-                                      color: AppColors.primaryColor,
+                                      color:
+                                          context
+                                                  .read<ThemeCubit>()
+                                                  .isLightTheme
+                                              ? AppColors.primaryColor
+                                              : Colors.orangeAccent,
                                     ),
                                   ),
                                 ],

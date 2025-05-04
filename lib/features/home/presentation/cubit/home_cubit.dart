@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:fake_store/core/network/shared.dart';
 import 'package:fake_store/core/shared/constants/app_constants.dart';
 import 'package:fake_store/core/shared/functions/save_data.dart';
@@ -45,8 +44,6 @@ class HomeCubit extends Cubit<HomeState> {
     "gaming",
     "appliances",
   ];
-
-  bool isDarkMode = false;
 
   HomeCubit({
     required this.productUsecase,
@@ -111,7 +108,6 @@ class HomeCubit extends Cubit<HomeState> {
         previousFetchedList = List.from(products);
         productsList = products;
         currentPage++;
-        isLoading = false;
         emit(ProductsSuccess(productsList));
       },
     );
@@ -131,6 +127,7 @@ class HomeCubit extends Cubit<HomeState> {
         saveData(productsList, AppConstants.cachedProducts);
       }
     }
+    isLoading = false;
   }
 
   Future<void> loadMoreProducts() async {
@@ -202,6 +199,7 @@ class HomeCubit extends Cubit<HomeState> {
     previousFetchedList = [];
     hasReachedMax = false;
     searchController.clear();
+    isSearchingNow = false;
     await getProducts();
   }
 
@@ -239,10 +237,5 @@ class HomeCubit extends Cubit<HomeState> {
         emit(ProductSearchEnd());
       }
     });
-  }
-
-  void toggleThemeMode() {
-    isDarkMode = !isDarkMode;
-    emit(ThemeModeChanged());
   }
 }
